@@ -1,18 +1,27 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using CodeQuery;
 
 namespace MvbaMapper
 {
-	public class SimpleMapper<TSource, TDestination>
+	public class SimpleMapper
 	{
-		public void Map(TSource source, TDestination destination)
+		public void Map(object source, object destination)
 		{
-			var sourceProperties = typeof(TSource)
+			if (source == null)
+			{
+				return;
+			}
+			if (destination == null)
+			{
+				throw new ArgumentNullException("destination");
+			}
+			var sourceProperties = source.GetType()
 				.GetProperties()
 				.ThatHaveAGetter()
 				.ToDictionary(x => x.Name);
-			var destinationProperties = typeof(TDestination)
+			var destinationProperties = destination.GetType()
 				.GetProperties()
 				.ThatHaveASetter()
 				.Where(x => sourceProperties.ContainsKey(x.Name))

@@ -61,11 +61,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InputClass.cs" />
     <Compile Include="MappingTester.cs" />
     <Compile Include="MappingTesterTests.cs" />
+    <Compile Include="OutputClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomValueType.cs" />
     <Compile Include="SimpleMapperTests.cs" />
+    <Compile Include="TExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MvbaCommon\MvbaCommon.csproj">
