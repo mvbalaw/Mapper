@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvbaMapper", "MvbaMapper.csproj", "{7D7EBF6E-8A5D-4C06-9B4C-ADAFB744A6CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvbaMapperTests", "..\MvbaMapperTests\MvbaMapperTests.csproj", "{9447608F-ACFF-433D-85C4-D88BAFF2FBCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvbaCommon", "..\MvbaCommon\MvbaCommon.csproj", "{308DBC71-1202-473B-818E-B49AF9294EEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D7EBF6E-8A5D-4C06-9B4C-ADAFB744A6CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D7EBF6E-8A5D-4C06-9B4C-ADAFB744A6CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D7EBF6E-8A5D-4C06-9B4C-ADAFB744A6CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D7EBF6E-8A5D-4C06-9B4C-ADAFB744A6CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9447608F-ACFF-433D-85C4-D88BAFF2FBCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9447608F-ACFF-433D-85C4-D88BAFF2FBCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9447608F-ACFF-433D-85C4-D88BAFF2FBCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9447608F-ACFF-433D-85C4-D88BAFF2FBCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{308DBC71-1202-473B-818E-B49AF9294EEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{308DBC71-1202-473B-818E-B49AF9294EEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{308DBC71-1202-473B-818E-B49AF9294EEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{308DBC71-1202-473B-818E-B49AF9294EEE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
