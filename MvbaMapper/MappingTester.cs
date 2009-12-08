@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,6 +61,22 @@ namespace MvbaMapper
 				if (expectedValue == null || actualValue == null)
 				{
 					notification.Add(Notification.WarningFor(propertyInfo.Name));
+					continue;
+				}
+
+				if (expectedValue.Equals(actualValue))
+				{
+					continue;
+				}
+
+				if (typeof(IEnumerable).IsAssignableFrom(expectedValue.GetType()) &&
+				    typeof(IEnumerable).IsAssignableFrom(actualValue.GetType()))
+				{
+					var comparer = new EnumerableComparer((IEnumerable)expectedValue, (IEnumerable)actualValue);
+					if (!comparer.HaveSameContents())
+					{
+						notification.Add(Notification.WarningFor(propertyInfo.Name));
+					}
 					continue;
 				}
 				if (!expectedValue.Equals(actualValue))

@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnumerableComparer.cs" />
     <Compile Include="MappingTester.cs" />
     <Compile Include="RandomValueType.cs" />
     <Compile Include="SimpleMapper.cs" />
