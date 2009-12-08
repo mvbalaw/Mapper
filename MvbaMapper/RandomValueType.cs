@@ -1,11 +1,11 @@
 using System;
 using System.Text;
 
-using FluentAssert;
+using MvbaCore;
 
-namespace MvbaMapperTests
+namespace MvbaMapper
 {
-	public class RandomValueType : NamedConstant<RandomValueType>
+	internal class RandomValueType : NamedConstant<RandomValueType>
 	{
 		private static readonly Random _random = new Random();
 		public static readonly RandomValueType Bool = new RandomValueType(typeof(bool).FullName, () => true);

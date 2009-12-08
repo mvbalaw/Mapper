@@ -3,9 +3,9 @@ using System.Linq;
 
 using CodeQuery;
 
-using FluentAssert;
+using MvbaCore;
 
-namespace MvbaMapperTests
+namespace MvbaMapper
 {
 	public class MappingTester<TSource, TDestination>
 		where TSource : new()
@@ -26,7 +26,7 @@ namespace MvbaMapperTests
 
 		private void Populate(TSource source)
 		{
-			foreach (var propertyInfo in typeof(TSource)
+			foreach (var propertyInfo in source.GetType()
 				.GetProperties()
 				.ThatHaveAGetter()
 				.ThatHaveASetter())
@@ -37,9 +37,10 @@ namespace MvbaMapperTests
 			}
 		}
 
-		public void Verify(TDestination actual, TDestination expected)
+		public Notification Verify(TDestination actual, TDestination expected)
 		{
-			var destinationProperties = typeof(TDestination)
+			Notification notification = new Notification();
+			var destinationProperties = expected.GetType()
 				.GetProperties()
 				.ThatHaveASetter()
 				.ThatHaveAGetter()
@@ -49,8 +50,22 @@ namespace MvbaMapperTests
 			{
 				var expectedValue = propertyInfo.GetValue(expected, null);
 				var actualValue = propertyInfo.GetValue(actual, null);
-				actualValue.ShouldBeEqualTo(expectedValue, "Property " + propertyInfo.Name + " does not match");
+
+				if (expectedValue == null && actualValue == null)
+				{
+					continue;
+				}
+				if (expectedValue == null || actualValue == null)
+				{
+					notification.Add(Notification.WarningFor(propertyInfo.Name));
+					continue;
+				}
+				if (!expectedValue.Equals(actualValue))
+				{
+					notification.Add(Notification.WarningFor(propertyInfo.Name));
+				}
 			}
+			return notification;
 		}
 	}
 }

@@ -1,5 +1,7 @@
 using FluentAssert;
 
+using MvbaMapper;
+
 using NUnit.Framework;
 
 namespace MvbaMapperTests
@@ -74,42 +76,83 @@ namespace MvbaMapperTests
 			}
 
 			[Test]
-			[ExpectedException(typeof(AssertionException), UserMessage = "Property BooleanProperty does not match")]
 			public void Should_detect_bool_property_differences()
 			{
 				var actual = new OutputClass
 					{
 						BooleanProperty = !_expected.BooleanProperty,
 						StringProperty = _expected.StringProperty,
+						DecimalProperty = _expected.DecimalProperty,
+						DateTimeProperty = _expected.DateTimeProperty,
 						IntegerProperty = _expected.IntegerProperty
 					};
-				tester.Verify(actual, _expected);
+				var notification = tester.Verify(actual, _expected);
+				notification.IsValid.ShouldBeFalse();
+				notification.ToString().ShouldBeEqualTo("BooleanProperty");
 			}
 
 			[Test]
-			[ExpectedException(typeof(AssertionException), UserMessage = "Property IntegerProperty does not match")]
+			public void Should_detect_DateTime_property_differences()
+			{
+				var actual = new OutputClass
+					{
+						BooleanProperty = _expected.BooleanProperty,
+						StringProperty = _expected.StringProperty,
+						DecimalProperty = _expected.DecimalProperty,
+						DateTimeProperty = _expected.DateTimeProperty.AddDays(1),
+						IntegerProperty = _expected.IntegerProperty
+					};
+				var notification = tester.Verify(actual, _expected);
+				notification.IsValid.ShouldBeFalse();
+				notification.ToString().ShouldBeEqualTo("DateTimeProperty");
+			}
+
+			[Test]
+			public void Should_detect_decimal_property_differences()
+			{
+				var actual = new OutputClass
+					{
+						BooleanProperty = _expected.BooleanProperty,
+						StringProperty = _expected.StringProperty,
+						DecimalProperty = _expected.DecimalProperty - 1,
+						DateTimeProperty = _expected.DateTimeProperty,
+						IntegerProperty = _expected.IntegerProperty
+					};
+				var notification = tester.Verify(actual, _expected);
+				notification.IsValid.ShouldBeFalse();
+				notification.ToString().ShouldBeEqualTo("DecimalProperty");
+			}
+
+			[Test]
 			public void Should_detect_int_property_differences()
 			{
 				var actual = new OutputClass
 					{
 						BooleanProperty = _expected.BooleanProperty,
 						StringProperty = _expected.StringProperty,
+						DecimalProperty = _expected.DecimalProperty,
+						DateTimeProperty = _expected.DateTimeProperty,
 						IntegerProperty = _expected.IntegerProperty - 1
 					};
-				tester.Verify(actual, _expected);
+				var notification = tester.Verify(actual, _expected);
+				notification.IsValid.ShouldBeFalse();
+				notification.ToString().ShouldBeEqualTo("IntegerProperty");
 			}
 
 			[Test]
-			[ExpectedException(typeof(AssertionException), UserMessage = "Property StringProperty does not match")]
 			public void Should_detect_string_property_differences()
 			{
 				var actual = new OutputClass
 					{
 						BooleanProperty = _expected.BooleanProperty,
 						StringProperty = _expected.StringProperty.ToUpper(),
+						DecimalProperty = _expected.DecimalProperty,
+						DateTimeProperty = _expected.DateTimeProperty,
 						IntegerProperty = _expected.IntegerProperty
 					};
-				tester.Verify(actual, _expected);
+				var notification = tester.Verify(actual, _expected);
+				notification.IsValid.ShouldBeFalse();
+				notification.ToString().ShouldBeEqualTo("StringProperty");
 			}
 		}
 	}

@@ -43,6 +43,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="MvbaCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\MvbaCore.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\nunit.framework.dll</HintPath>
@@ -62,19 +66,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InputClass.cs" />
-    <Compile Include="MappingTester.cs" />
     <Compile Include="MappingTesterTests.cs" />
     <Compile Include="OutputClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomValueType.cs" />
     <Compile Include="SimpleMapperTests.cs" />
     <Compile Include="TExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MvbaCommon\MvbaCommon.csproj">
-      <Project>{308DBC71-1202-473B-818E-B49AF9294EEE}</Project>
-      <Name>MvbaCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MvbaMapper\MvbaMapper.csproj">
       <Project>{7D7EBF6E-8A5D-4C06-9B4C-ADAFB744A6CF}</Project>
       <Name>MvbaMapper</Name>
