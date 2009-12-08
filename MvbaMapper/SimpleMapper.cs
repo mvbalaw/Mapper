@@ -25,7 +25,8 @@ namespace MvbaMapper
 				.GetProperties()
 				.ThatHaveASetter()
 				.Where(x => sourceProperties.ContainsKey(x.Name))
-				.Where(x => sourceProperties[x.Name].PropertyType.IsAssignableFrom(x.PropertyType))
+				.Where(x => x.PropertyType.IsAssignableFrom(sourceProperties[x.Name].PropertyType) ||
+				            x.PropertyType.IsGenericAssignableFrom(sourceProperties[x.Name].PropertyType))
 				.ToDictionary(x => x.Name);
 			foreach (var destinationProperty in destinationProperties.Values)
 			{

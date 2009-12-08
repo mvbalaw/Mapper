@@ -18,7 +18,9 @@ namespace MvbaMapperTests
 					{
 						BooleanProperty = source.BooleanProperty,
 						IntegerProperty = source.IntegerProperty,
-						StringProperty = source.StringProperty
+						StringProperty = source.StringProperty,
+						DecimalProperty = source.DecimalProperty,
+						DateTimeProperty = source.DateTimeProperty
 					};
 				OutputClass actual = new OutputClass();
 				actual.MapFrom(source);
@@ -38,7 +40,9 @@ namespace MvbaMapperTests
 					{
 						BooleanProperty = source.BooleanProperty,
 						IntegerProperty = source.IntegerProperty,
-						StringProperty = source.StringProperty
+						StringProperty = source.StringProperty,
+						DecimalProperty = source.DecimalProperty,
+						DateTimeProperty = source.DateTimeProperty
 					};
 				OutputClass actual = source.MapTo<OutputClass>();
 				tester.Verify(actual, expected);

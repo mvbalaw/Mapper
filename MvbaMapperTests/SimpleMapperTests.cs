@@ -28,7 +28,10 @@ namespace MvbaMapperTests
 					{
 						BooleanProperty = _source.BooleanProperty,
 						IntegerProperty = _source.IntegerProperty,
-						StringProperty = _source.StringProperty
+						StringProperty = _source.StringProperty,
+						DecimalProperty = _source.DecimalProperty,
+						DateTimeProperty = _source.DateTimeProperty,
+						DateTimeToNullable = _source.DateTimeToNullable
 					};
 				var actual = new OutputClass();
 				new SimpleMapper().Map(_source, actual);
@@ -42,7 +45,10 @@ namespace MvbaMapperTests
 					{
 						BooleanProperty = _source.BooleanProperty,
 						IntegerProperty = _source.IntegerProperty,
-						StringProperty = _source.StringProperty
+						StringProperty = _source.StringProperty,
+						DecimalProperty = _source.DecimalProperty,
+						DateTimeProperty = _source.DateTimeProperty,
+						DateTimeToNullable = _source.DateTimeToNullable
 					};
 				var actual = new OutputClass();
 				object src = _source;

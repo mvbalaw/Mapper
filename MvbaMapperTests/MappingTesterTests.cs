@@ -67,7 +67,9 @@ namespace MvbaMapperTests
 					{
 						BooleanProperty = source.BooleanProperty,
 						IntegerProperty = source.IntegerProperty,
-						StringProperty = source.StringProperty
+						StringProperty = source.StringProperty,
+						DecimalProperty = source.DecimalProperty,
+						DateTimeProperty = source.DateTimeProperty
 					};
 			}
 
