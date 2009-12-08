@@ -8,20 +8,22 @@ using MvbaCore;
 namespace MvbaMapper
 {
 	public class MappingTester<TSource, TDestination>
-		where TSource : new()
+		where TSource : class, new()
 	{
 		private readonly Dictionary<string, object> _propertyValues = new Dictionary<string, object>();
-		private readonly TSource _source;
-
-		public MappingTester()
-		{
-			_source = new TSource();
-			Populate(_source);
-		}
+		private TSource _source;
 
 		public TSource Source
 		{
-			get { return _source; }
+			get
+			{
+				if (_source == null)
+				{
+					_source = new TSource();
+					Populate(_source);
+				}
+				return _source;
+			}
 		}
 
 		private void Populate(TSource source)
