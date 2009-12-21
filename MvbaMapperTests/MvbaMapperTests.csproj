@@ -65,10 +65,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassFillerTests.cs" />
     <Compile Include="EnumerableComparerTests.cs" />
     <Compile Include="InputClass.cs" />
     <Compile Include="MappingTesterTests.cs" />
     <Compile Include="OutputClass.cs" />
+    <Compile Include="OutputListClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleMapperTests.cs" />
     <Compile Include="TExtensionsTests.cs" />

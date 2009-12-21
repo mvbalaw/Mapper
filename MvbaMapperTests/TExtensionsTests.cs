@@ -12,8 +12,8 @@ namespace MvbaMapperTests
 			[Test]
 			public void Should_populate_properties()
 			{
-				var tester = new MappingTester<InputClass, OutputClass>();
-				var source = tester.Source;
+				var tester = new MappingTester<OutputClass>();
+				var source = new ClassFiller<InputClass>().Source;
 				var expected = new OutputClass
 					{
 						BooleanProperty = source.BooleanProperty,
@@ -34,8 +34,8 @@ namespace MvbaMapperTests
 			[Test]
 			public void Should_populate_properties()
 			{
-				var tester = new MappingTester<InputClass, OutputClass>();
-				var source = tester.Source;
+				var tester = new MappingTester<OutputClass>();
+				var source = new ClassFiller<InputClass>().Source;
 				var expected = new OutputClass
 					{
 						BooleanProperty = source.BooleanProperty,

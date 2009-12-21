@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 
 using CodeQuery;
@@ -8,41 +7,11 @@ using MvbaCore;
 
 namespace MvbaMapper
 {
-	public class MappingTester<TSource, TDestination>
-		where TSource : class, new()
+	public class MappingTester<TDestination>
 	{
-		private readonly Dictionary<string, object> _propertyValues = new Dictionary<string, object>();
-		private TSource _source;
-
-		public TSource Source
-		{
-			get
-			{
-				if (_source == null)
-				{
-					_source = new TSource();
-					Populate(_source);
-				}
-				return _source;
-			}
-		}
-
-		private void Populate(TSource source)
-		{
-			foreach (var propertyInfo in source.GetType()
-				.GetProperties()
-				.ThatHaveAGetter()
-				.ThatHaveASetter())
-			{
-				var value = RandomValueType.GetFor(propertyInfo.PropertyType.FullName).CreateRandomValue();
-				_propertyValues.Add(propertyInfo.Name, value);
-				propertyInfo.SetValue(source, value, null);
-			}
-		}
-
 		public Notification Verify(TDestination actual, TDestination expected)
 		{
-			Notification notification = new Notification();
+			var notification = new Notification();
 			var destinationProperties = expected.GetType()
 				.GetProperties()
 				.ThatHaveASetter()

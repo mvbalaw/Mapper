@@ -12,13 +12,13 @@ namespace MvbaMapperTests
 		public class When_asked_to_map
 		{
 			private InputClass _source;
-			private MappingTester<InputClass, OutputClass> tester;
+			private MappingTester<OutputClass> tester;
 
 			[SetUp]
 			public void BeforeEachTest()
 			{
-				tester = new MappingTester<InputClass, OutputClass>();
-				_source = tester.Source;
+				tester = new MappingTester<OutputClass>();
+				_source = new ClassFiller<InputClass>().Source;
 			}
 
 			[Test]
