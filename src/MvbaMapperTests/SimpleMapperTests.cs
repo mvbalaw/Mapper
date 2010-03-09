@@ -1,4 +1,9 @@
 using System;
+using System.Linq;
+
+using FluentAssert;
+
+using MvbaCore;
 
 using MvbaMapper;
 
@@ -22,20 +27,27 @@ namespace MvbaMapperTests
 			}
 
 			[Test]
-			public void Should_populate_properties_with_same_name_and_assignable_type()
+			public void Should_ignore_Property_name_case()
 			{
-				var expected = new OutputClass
+				var expected = new OutputClassLowerCase
 					{
-						BooleanProperty = _source.BooleanProperty,
-						IntegerProperty = _source.IntegerProperty,
-						StringProperty = _source.StringProperty,
-						DecimalProperty = _source.DecimalProperty,
-						DateTimeProperty = _source.DateTimeProperty,
-						DateTimeToNullable = _source.DateTimeToNullable
+						strIngPropErty = _source.StringProperty,
 					};
-				var actual = new OutputClass();
+
+				Reflection.GetPropertyName((OutputClassLowerCase x) => x.strIngPropErty).First().ShouldBeEqualTo('s');
+
+				var actual = new OutputClassLowerCase();
 				new SimpleMapper().Map(_source, actual);
-				tester.Verify(actual, expected);
+				var result = new MappingTester<OutputClassLowerCase>().Verify(actual, expected);
+				result.IsValid.ShouldBeTrue(result.ToString());
+			}
+
+			[Test]
+			public void Should_not_throw_exception_if_the_source_is_null()
+			{
+				var actual = new OutputClass();
+				_source = null;
+				new SimpleMapper().Map(_source, actual);
 			}
 
 			[Test]
@@ -53,22 +65,33 @@ namespace MvbaMapperTests
 				var actual = new OutputClass();
 				object src = _source;
 				new SimpleMapper().Map(src, actual);
-				tester.Verify(actual, expected);
+				var result = tester.Verify(actual, expected);
+				result.IsValid.ShouldBeTrue(result.ToString());
 			}
 
 			[Test]
-			public void Should_not_throw_exception_if_the_source_is_null()
+			public void Should_populate_properties_with_same_name_and_assignable_type()
 			{
+				var expected = new OutputClass
+					{
+						BooleanProperty = _source.BooleanProperty,
+						IntegerProperty = _source.IntegerProperty,
+						StringProperty = _source.StringProperty,
+						DecimalProperty = _source.DecimalProperty,
+						DateTimeProperty = _source.DateTimeProperty,
+						DateTimeToNullable = _source.DateTimeToNullable
+					};
 				var actual = new OutputClass();
-				_source = null;
 				new SimpleMapper().Map(_source, actual);
+				var result = tester.Verify(actual, expected);
+				result.IsValid.ShouldBeTrue(result.ToString());
 			}
 
-			[Test, ExpectedException(typeof(ArgumentNullException))]
+			[Test]
 			public void Should_throw_exception_if_the_destination_is_null()
 			{
 				const OutputClass actual = null;
-				new SimpleMapper().Map(_source, actual);
+				Assert.Throws(typeof(ArgumentNullException), () => new SimpleMapper().Map(_source, actual));
 			}
 		}
 	}

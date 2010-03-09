@@ -11,4 +11,9 @@ namespace MvbaMapperTests
 		public DateTime DateTimeProperty { get; set; }
 		public DateTime? DateTimeToNullable { get; set; }
 	}
+
+	public class OutputClassLowerCase
+	{
+		public string strIngPropErty { get; set; }
+	}
 }

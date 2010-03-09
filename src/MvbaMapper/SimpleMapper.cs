@@ -20,19 +20,19 @@ namespace MvbaMapper
 			var sourceProperties = source.GetType()
 				.GetProperties()
 				.ThatHaveAGetter()
-				.ToDictionary(x => x.Name);
+				.ToDictionary(x => x.Name.ToLower());
 			var destinationProperties = destination.GetType()
 				.GetProperties()
 				.ThatHaveASetter()
-				.Where(x => sourceProperties.ContainsKey(x.Name))
-				.Where(x => x.PropertyType.IsAssignableFrom(sourceProperties[x.Name].PropertyType) ||
-				            x.PropertyType.IsGenericAssignableFrom(sourceProperties[x.Name].PropertyType))
-				.ToDictionary(x => x.Name);
-			foreach (var destinationProperty in destinationProperties.Values)
+				.Where(x => sourceProperties.ContainsKey(x.Name.ToLower()))
+				.Where(x => x.PropertyType.IsAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType) ||
+							x.PropertyType.IsGenericAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType))
+				.ToDictionary(x => x.Name.ToLower());
+			foreach (var destinationProperty in destinationProperties)
 			{
-				var sourceProperty = sourceProperties[destinationProperty.Name];
+				var sourceProperty = sourceProperties[destinationProperty.Key];
 				var sourceValue = sourceProperty.GetValue(source, null);
-				destinationProperty.SetValue(destination, sourceValue, null);
+				destinationProperty.Value.SetValue(destination, sourceValue, null);
 			}
 		}
 	}
