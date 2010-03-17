@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using CodeQuery;
@@ -7,6 +8,35 @@ namespace MvbaMapper
 {
 	public class SimpleMapper
 	{
+		public static IEnumerable<SourceToDestination> GetAccessors(Type sourceType, Type destinationType)
+		{
+			var sourceProperties = sourceType
+				.GetProperties()
+				.ThatHaveAGetter()
+				.ToDictionary(x => x.Name.ToLower());
+			var destinationProperties = destinationType
+				.GetProperties()
+				.ThatHaveASetter()
+				.Where(x => sourceProperties.ContainsKey(x.Name.ToLower()))
+				.Where(x => x.PropertyType.IsAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType) ||
+				            x.PropertyType.IsGenericAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType))
+				.ToDictionary(x => x.Name.ToLower());
+			var accessors = new List<SourceToDestination>();
+			foreach (var destinationProperty in destinationProperties)
+			{
+				var sourceProperty = sourceProperties[destinationProperty.Key];
+
+				var property = destinationProperty;
+				var std = new SourceToDestination
+					{
+						GetValueFromSource = (source) => sourceProperty.GetValue(source, null),
+						SetValueToDestination = (destination, value) => property.Value.SetValue(destination, value, null)
+					};
+				accessors.Add(std);
+			}
+			return accessors;
+		}
+
 		public void Map(object source, object destination)
 		{
 			if (source == null)
@@ -17,22 +47,10 @@ namespace MvbaMapper
 			{
 				throw new ArgumentNullException("destination");
 			}
-			var sourceProperties = source.GetType()
-				.GetProperties()
-				.ThatHaveAGetter()
-				.ToDictionary(x => x.Name.ToLower());
-			var destinationProperties = destination.GetType()
-				.GetProperties()
-				.ThatHaveASetter()
-				.Where(x => sourceProperties.ContainsKey(x.Name.ToLower()))
-				.Where(x => x.PropertyType.IsAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType) ||
-							x.PropertyType.IsGenericAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType))
-				.ToDictionary(x => x.Name.ToLower());
-			foreach (var destinationProperty in destinationProperties)
+			foreach (var std in GetAccessors(source.GetType(), destination.GetType()))
 			{
-				var sourceProperty = sourceProperties[destinationProperty.Key];
-				var sourceValue = sourceProperty.GetValue(source, null);
-				destinationProperty.Value.SetValue(destination, sourceValue, null);
+				var sourceValue = std.GetValueFromSource(source);
+				std.SetValueToDestination(destination, sourceValue);
 			}
 		}
 	}
