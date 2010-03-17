@@ -18,8 +18,6 @@ namespace MvbaMapper
 				.GetProperties()
 				.ThatHaveASetter()
 				.Where(x => sourceProperties.ContainsKey(x.Name.ToLower()))
-				.Where(x => x.PropertyType.IsAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType) ||
-				            x.PropertyType.IsGenericAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType))
 				.ToDictionary(x => x.Name.ToLower());
 			var accessors = new List<PropertyMappingInfo>();
 			foreach (var destinationProperty in destinationProperties)
@@ -27,14 +25,15 @@ namespace MvbaMapper
 				var sourceProperty = sourceProperties[destinationProperty.Key];
 
 				var property = destinationProperty;
-				var std = new PropertyMappingInfo
+				var propertyMappingInfo = new PropertyMappingInfo
 					{
 						Name = destinationProperty.Key,
-						PropertyType = destinationProperty.Value.PropertyType,
-						GetValueFromSource = (source) => sourceProperty.GetValue(source, null),
+						SourcePropertyType = sourceProperty.PropertyType,
+						DestinationPropertyType = destinationProperty.Value.PropertyType,
+						GetValueFromSource = source => sourceProperty.GetValue(source, null),
 						SetValueToDestination = (destination, value) => property.Value.SetValue(destination, value, null)
 					};
-				accessors.Add(std);
+				accessors.Add(propertyMappingInfo);
 			}
 			return accessors;
 		}
@@ -49,7 +48,9 @@ namespace MvbaMapper
 			{
 				throw new ArgumentNullException("destination");
 			}
-			foreach (var std in GetAccessors(source.GetType(), destination.GetType()))
+			foreach (var std in GetAccessors(source.GetType(), destination.GetType())
+				.Where(x => x.DestinationPropertyType.IsAssignableFrom(x.SourcePropertyType) ||
+				            x.DestinationPropertyType.IsGenericAssignableFrom(x.SourcePropertyType)))
 			{
 				var sourceValue = std.GetValueFromSource(source);
 				std.SetValueToDestination(destination, sourceValue);
