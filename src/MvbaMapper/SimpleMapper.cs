@@ -8,7 +8,7 @@ namespace MvbaMapper
 {
 	public class SimpleMapper
 	{
-		public static IEnumerable<SourceToDestination> GetAccessors(Type sourceType, Type destinationType)
+		public static IEnumerable<PropertyMappingInfo> GetAccessors(Type sourceType, Type destinationType)
 		{
 			var sourceProperties = sourceType
 				.GetProperties()
@@ -21,14 +21,16 @@ namespace MvbaMapper
 				.Where(x => x.PropertyType.IsAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType) ||
 				            x.PropertyType.IsGenericAssignableFrom(sourceProperties[x.Name.ToLower()].PropertyType))
 				.ToDictionary(x => x.Name.ToLower());
-			var accessors = new List<SourceToDestination>();
+			var accessors = new List<PropertyMappingInfo>();
 			foreach (var destinationProperty in destinationProperties)
 			{
 				var sourceProperty = sourceProperties[destinationProperty.Key];
 
 				var property = destinationProperty;
-				var std = new SourceToDestination
+				var std = new PropertyMappingInfo
 					{
+						Name = destinationProperty.Key,
+						PropertyType = destinationProperty.Value.PropertyType,
 						GetValueFromSource = (source) => sourceProperty.GetValue(source, null),
 						SetValueToDestination = (destination, value) => property.Value.SetValue(destination, value, null)
 					};
