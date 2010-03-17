@@ -9,7 +9,7 @@ require 'zip/zip'
 require 'zip/zipfilesystem'
 
 RESULTS_DIR = "results"
-BUILD_NUMBER = "0.1.0."
+BUILD_NUMBER = "1.0.0."
 PRODUCT = "MvbaMapper"
 COPYRIGHT = 'Copyright 2009 McCreary, Veselka, Bragg & Allen, P.C. All rights reserved.';
 COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';

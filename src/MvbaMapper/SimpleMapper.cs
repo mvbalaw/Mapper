@@ -27,7 +27,7 @@ namespace MvbaMapper
 				var property = destinationProperty;
 				var propertyMappingInfo = new PropertyMappingInfo
 					{
-						Name = destinationProperty.Key,
+						Name = destinationProperty.Value.Name,
 						SourcePropertyType = sourceProperty.PropertyType,
 						DestinationPropertyType = destinationProperty.Value.PropertyType,
 						GetValueFromSource = source => sourceProperty.GetValue(source, null),
