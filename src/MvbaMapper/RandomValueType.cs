@@ -38,10 +38,5 @@ namespace MvbaMapper
 		{
 			return _createRandomValue.Invoke();
 		}
-
-		public static RandomValueType GetFor(string key)
-		{
-			return Get(key);
-		}
 	}
 }
