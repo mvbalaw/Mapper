@@ -2,30 +2,30 @@ We wanted a simple property mapper for c# Converter classes. We started with Aut
 
 Here we present a simple mapper that copies values from properties in type A to type B if the names and property types match. We will add to this project as our needs grow.
 
-## Sample
+## Samples
 
-   User source = new User();
-   Customer destination = source.MapTo<Customer>();
+	User source = new User();
+	Customer destination = source.MapTo<Customer>();
 
-   User source = new User();
-   Customer destination = new Customer();
-   destination.MapFrom(source);
+	User source = new User();
+	Customer destination = new Customer();
+	destination.MapFrom(source);
 
-   User source = new User();
-   Customer destination = new Customer();
-   new SimpleMapper().Map(source, destination);
+	User source = new User();
+	Customer destination = new Customer();
+	new SimpleMapper().Map(source, destination);
 
 ## Testing class mappings
 
-   const int age = 26;
-   const string name = "James";
-   var user = new User { Name = name, Age = age };
-   var customer = _someConverter.Convert(user);
-   var expectedCustomer = new Customer { Name = name, Age = age };
-   
-   var tester = new MappingTester<Customer>();
-   var result = tester.Verify(customer, expectedCustomer)
-   result.IsValid.ShouldBeTrue();
+	const int age = 26;
+	const string name = "James";
+	var user = new User { Name = name, Age = age };
+	var customer = _someConverter.Convert(user);
+	var expectedCustomer = new Customer { Name = name, Age = age };
+	
+	var tester = new MappingTester<Customer>();
+	var result = tester.Verify(customer, expectedCustomer)
+	result.IsValid.ShouldBeTrue();
 
 ## License		
 
