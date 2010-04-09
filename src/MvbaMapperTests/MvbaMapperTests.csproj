@@ -63,12 +63,17 @@
   <ItemGroup>
     <Compile Include="ClassFillerTests.cs" />
     <Compile Include="EnumerableComparerTests.cs" />
-    <Compile Include="InputClass.cs" />
+    <Compile Include="TestClasses\LowerCaseContext.cs" />
+    <Compile Include="TestClasses\OutputClassContext.cs" />
+    <Compile Include="TestClasses\ObjectSourceContext.cs" />
+    <Compile Include="TestClasses\InputClass.cs" />
     <Compile Include="MappingTesterTests.cs" />
-    <Compile Include="OutputClass.cs" />
-    <Compile Include="OutputListClass.cs" />
+    <Compile Include="TestClasses\OutputClass.cs" />
+    <Compile Include="TestClasses\OutputClassLowerCase.cs" />
+    <Compile Include="TestClasses\OutputListClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleMapperTests.cs" />
+    <Compile Include="TestClasses\OutputListClassContext.cs" />
     <Compile Include="TExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>

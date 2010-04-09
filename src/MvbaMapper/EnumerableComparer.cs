@@ -5,47 +5,41 @@ namespace MvbaMapper
 {
 	public class EnumerableComparer
 	{
-		private readonly ArrayList _listA;
-		private readonly ArrayList _listB;
-
-		public EnumerableComparer(IEnumerable listA, IEnumerable listB)
+		public bool HaveSameContents(IEnumerable listA, IEnumerable listB)
 		{
 			if (listA == null)
 			{
 				throw new ArgumentNullException("listA", "enumerable being compared cannot be null");
 			}
-			_listA = new ArrayList();
+			var nonNullA = new ArrayList();
 			foreach (var item in listA)
 			{
 				if (item != null)
 				{
-					_listA.Add(item);
+					nonNullA.Add(item);
 				}
 			}
-			_listB = new ArrayList();
+			var nonNullB = new ArrayList();
 			foreach (var item in listB)
 			{
 				if (item != null)
 				{
-					_listB.Add(item);
+					nonNullB.Add(item);
 				}
 			}
-		}
 
-		public bool HaveSameContents()
-		{
-			if (_listA.Count != _listB.Count)
+			if (nonNullA.Count != nonNullB.Count)
 			{
 				return false;
 			}
-			foreach (var item in _listA)
+			foreach (var item in nonNullA)
 			{
-				int index = _listB.IndexOf(item);
+				int index = nonNullB.IndexOf(item);
 				if (index == -1)
 				{
 					return false;
 				}
-				_listB.RemoveAt(index);
+				nonNullB.RemoveAt(index);
 			}
 			return true;
 		}

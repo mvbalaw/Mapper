@@ -2,6 +2,8 @@ using FluentAssert;
 
 using MvbaMapper;
 
+using MvbaMapperTests.TestClasses;
+
 using NUnit.Framework;
 
 namespace MvbaMapperTests
@@ -9,50 +11,70 @@ namespace MvbaMapperTests
 	public class ClassFillerTests
 	{
 		[TestFixture]
-		public class When_asked_for_the_Source
+		public class When_asked_to_generate_an_object
 		{
+			private ClassFiller<InputClass> _classFiller;
 			private InputClass _source;
-			private ClassFiller<InputClass> tester;
 
 			[SetUp]
 			public void BeforeEachTest()
 			{
-				tester = new ClassFiller<InputClass>();
-				_source = tester.Source;
+				_classFiller = new ClassFiller<InputClass>();
+				_source = _classFiller.Source;
 			}
 
 			[Test]
-			public void Should_initialize_bool_properties_with_non_default_values()
+			public void Given_a_target_type()
+			{
+				Test.Given(_classFiller)
+					.When(The_desired_object_is_created)
+					.Should(Not_return_a_null_object)
+					.Should(Initialize_boolean_properties_with_non_default_values)
+					.Should(Initialize_boolean_properties_with_non_default_values)
+					.Should(Initialize_integer_properties_with_non_default_values)
+					.Should(Initialize_string_properties_with_non_default_values)
+					.Verify();
+			}
+
+			[Test]
+			public void Given_a_type_that_was_previously_generated()
+			{
+				Test.Given(_classFiller)
+					.When(The_desired_object_is_created)
+					.Should(Get_the_originally_generated_object)
+					.Verify();
+			}
+
+			private void Get_the_originally_generated_object(ClassFiller<InputClass> obj)
+			{
+				ReferenceEquals(_source, _classFiller.Source).ShouldBeTrue();
+			}
+
+			private void Initialize_boolean_properties_with_non_default_values(ClassFiller<InputClass> obj)
 			{
 				_source.BooleanProperty.ShouldNotBeEqualTo(default(bool));
 			}
 
-			[Test]
-			public void Should_initialize_int_properties_with_non_default_values()
+			private void Initialize_integer_properties_with_non_default_values(ClassFiller<InputClass> obj)
 			{
 				_source.IntegerProperty.ShouldNotBeEqualTo(default(int));
 			}
 
-			[Test]
-			public void Should_initialize_string_properties_with_non_default_values()
+			private void Initialize_string_properties_with_non_default_values(ClassFiller<InputClass> obj)
 			{
 				_source.StringProperty.ShouldNotBeEqualTo(default(string));
 				_source.StringProperty.ShouldNotBeEqualTo("");
 			}
 
-			[Test]
-			public void Should_return_a_non_null_value()
+			private void Not_return_a_null_object(ClassFiller<InputClass> obj)
 			{
 				_source.ShouldNotBeNull();
 			}
 
-			[Test]
-			public void Should_return_the_same_object_on_subsequent_calls()
+			private void The_desired_object_is_created(ClassFiller<InputClass> obj)
 			{
-				tester.Source.ShouldNotBeNull();
-				ReferenceEquals(_source, tester.Source).ShouldBeTrue();
+				_source = obj.Source;
 			}
 		}
-
 	}
 }

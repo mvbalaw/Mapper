@@ -41,8 +41,8 @@ namespace MvbaMapper
 				if (typeof(IEnumerable).IsAssignableFrom(expectedValue.GetType()) &&
 				    typeof(IEnumerable).IsAssignableFrom(actualValue.GetType()))
 				{
-					var comparer = new EnumerableComparer((IEnumerable)expectedValue, (IEnumerable)actualValue);
-					if (!comparer.HaveSameContents())
+					var comparer = new EnumerableComparer();
+					if (!comparer.HaveSameContents((IEnumerable)expectedValue, (IEnumerable)actualValue))
 					{
 						notification.Add(Notification.WarningFor(propertyInfo.Name));
 					}

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MvbaMapperTests
+namespace MvbaMapperTests.TestClasses
 {
 	public class OutputListClass
 	{
