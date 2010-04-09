@@ -229,29 +229,14 @@ namespace MvbaMapperTests
 				_expectedDifferenceMessage = "IntegerProperty";
 			}
 
-			private void Detect_the_difference(MappingTester<OutputClass> obj, OutputClassContext context)
+			private void Detect_the_difference()
 			{
 				_notification.IsValid.ShouldBeFalse();
-			}
-
-			private void Detect_the_difference(MappingTester<OutputListClass> obj, OutputListClassContext context)
-			{
-				_notification.IsValid.ShouldBeFalse();
-			}
-
-			private void Give_the_name_of_the_property_that_has_the_value_difference(MappingTester<OutputClass> obj, OutputClassContext context)
-			{
-				Give_the_name_of_the_property_that_has_the_value_difference();
 			}
 
 			private void Give_the_name_of_the_property_that_has_the_value_difference()
 			{
 				_notification.ToString().ShouldBeEqualTo(_expectedDifferenceMessage);
-			}
-
-			private void Give_the_name_of_the_property_that_has_the_value_difference(MappingTester<OutputListClass> obj, OutputListClassContext context)
-			{
-				Give_the_name_of_the_property_that_has_the_value_difference();
 			}
 
 			private void Verify_is_called(MappingTester<OutputClass> obj, OutputClassContext context)

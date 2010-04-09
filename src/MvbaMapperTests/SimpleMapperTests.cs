@@ -24,7 +24,8 @@ namespace MvbaMapperTests
 					.WithContext(new ObjectSourceContext())
 					.When(Map_is_called)
 					.With(A_null_destination)
-					.ShouldThrowException<ArgumentNullException>();
+					.ShouldThrowException<ArgumentNullException>()
+					.Verify();
 			}
 
 			[Test]
