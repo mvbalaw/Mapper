@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleMapperTests.cs" />
     <Compile Include="TestClasses\OutputListClassContext.cs" />
+    <Compile Include="TestClasses\SourceContext.cs" />
     <Compile Include="TExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
