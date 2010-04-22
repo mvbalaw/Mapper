@@ -91,12 +91,27 @@ namespace MvbaMapperTests
 			private OutputClass _expected;
 
 			[Test]
-			public void Should_populate_properties()
+			public void Given_a_source_object()
 			{
 				Test.Given(new ClassFiller<InputClass>().Source)
 					.When(MapTo_is_called)
 					.Should(Map_the_property_values)
 					.Verify();
+			}
+
+			[Test]
+			public void Given_a_source_object_with_properties_to_ignore()
+			{
+				Test.Given(new ClassFiller<InputClass>().Source)
+					.When(MapTo_is_called_with_properties_to_ignore)
+					.Should(Ignore_the_property_values_that_were_set_ignore)
+					.Should(Map_the_property_values)
+					.Verify();
+			}
+
+			private void Ignore_the_property_values_that_were_set_ignore(InputClass source)
+			{
+				_destination.DecimalProperty.ShouldNotBeEqualTo(source.DecimalProperty);
 			}
 
 			private void MapTo_is_called(InputClass source)
@@ -108,6 +123,20 @@ namespace MvbaMapperTests
 						IntegerProperty = source.IntegerProperty,
 						StringProperty = source.StringProperty,
 						DecimalProperty = source.DecimalProperty,
+						DateTimeProperty = source.DateTimeProperty,
+						DateTimeToNullable = source.DateTimeToNullable
+					};
+			}
+
+			private void MapTo_is_called_with_properties_to_ignore(InputClass source)
+			{
+				_destination = source.MapTo<OutputClass>(p => p.DecimalProperty);
+				_expected = new OutputClass
+					{
+						BooleanProperty = source.BooleanProperty,
+						IntegerProperty = source.IntegerProperty,
+						StringProperty = source.StringProperty,
+						DecimalProperty = 0,
 						DateTimeProperty = source.DateTimeProperty,
 						DateTimeToNullable = source.DateTimeToNullable
 					};
