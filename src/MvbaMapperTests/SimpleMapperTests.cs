@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 
 using FluentAssert;
 
@@ -51,6 +52,18 @@ namespace MvbaMapperTests
 			}
 
 			[Test]
+			public void Given_properties_to_ignore()
+			{
+				Test.Given(new SimpleMapper())
+					.WithContext(new SourceContext())
+					.When(Map_is_called_with_properties_to_ignore)
+					.With(Source_initialized)
+					.Should(Ignore_the_property_values_that_were_set_ignore)
+					.Should(Map_the_property_values)
+					.Verify();
+			}
+
+			[Test]
 			public void Given_source_passed_as_object_type()
 			{
 				Test.Given(new SimpleMapper())
@@ -72,6 +85,11 @@ namespace MvbaMapperTests
 				context.Source = null;
 				context.Destination = new OutputClassLowerCase();
 				context.Expected = new OutputClassLowerCase();
+			}
+
+			private static void Ignore_the_property_values_that_were_set_ignore(SourceContext context)
+			{
+				context.Destination.DecimalProperty.ShouldNotBeEqualTo(context.Source.DecimalProperty);
 			}
 
 			private static void Inputs_whose_property_names_have_different_casing(SimpleMapper obj, LowerCaseContext context)
@@ -100,13 +118,25 @@ namespace MvbaMapperTests
 				obj.Map(context.Source, context.Destination);
 			}
 
-			private static void Map_the_property_values(SimpleMapper obj, LowerCaseContext context)
+			private static void Map_is_called_with_properties_to_ignore(SimpleMapper simpleMapper, SourceContext context)
+			{
+				context.Expected.DecimalProperty = 0;
+				simpleMapper.Map(context.Source, context.Destination, new Expression<Func<OutputClass, object>>[] { x => x.DecimalProperty });
+			}
+
+			private static void Map_the_property_values(LowerCaseContext context)
 			{
 				var result = new MappingTester<OutputClassLowerCase>().Verify(context.Destination, context.Expected);
 				result.IsValid.ShouldBeTrue(result.ToString());
 			}
 
-			private static void Map_the_property_values(SimpleMapper obj, ObjectSourceContext context)
+			private static void Map_the_property_values(ObjectSourceContext context)
+			{
+				var result = new MappingTester<OutputClass>().Verify(context.Destination, context.Expected);
+				result.IsValid.ShouldBeTrue(result.ToString());
+			}
+
+			private static void Map_the_property_values(SourceContext context)
 			{
 				var result = new MappingTester<OutputClass>().Verify(context.Destination, context.Expected);
 				result.IsValid.ShouldBeTrue(result.ToString());
@@ -116,6 +146,22 @@ namespace MvbaMapperTests
 			{
 				var result = new MappingTester<OutputClassLowerCase>().Verify(context.Destination, context.Expected);
 				result.IsValid.ShouldBeTrue(result.ToString());
+			}
+
+			private static void Source_initialized(SourceContext context)
+			{
+				var source = new ClassFiller<InputClass>().Source;
+				context.Source = source;
+				context.Expected = new OutputClass
+					{
+						BooleanProperty = source.BooleanProperty,
+						IntegerProperty = source.IntegerProperty,
+						StringProperty = source.StringProperty,
+						DecimalProperty = 0,
+						DateTimeProperty = source.DateTimeProperty,
+						DateTimeToNullable = source.DateTimeToNullable
+					};
+				context.Destination = new OutputClass();
 			}
 
 			private static void Source_passed_as_object_type(SimpleMapper obj, ObjectSourceContext context)

@@ -13,6 +13,7 @@ namespace MvbaMapperTests
 		[TestFixture]
 		public class When_asked_to_map_from_another_class
 		{
+			private OutputClass _expected;
 			private InputClass _source;
 
 			[SetUp]
@@ -30,10 +31,24 @@ namespace MvbaMapperTests
 					.Verify();
 			}
 
-			private void Map_the_property_values(OutputClass destination)
+			[Test]
+			public void Given_a_source_object_with_properties_to_ignore()
 			{
-				var tester = new MappingTester<OutputClass>();
-				var expected = new OutputClass
+				Test.Given(new OutputClass())
+					.When(MapFrom_is_called_with_properties_to_ignore)
+					.Should(Ignore_the_property_values_that_were_set_ignore)
+					.Should(Map_the_property_values)
+					.Verify();
+			}
+
+			private void Ignore_the_property_values_that_were_set_ignore(OutputClass destination)
+			{
+				destination.DecimalProperty.ShouldNotBeEqualTo(_source.DecimalProperty);
+			}
+
+			private void MapFrom_is_called(OutputClass destination)
+			{
+				_expected = new OutputClass
 					{
 						BooleanProperty = _source.BooleanProperty,
 						IntegerProperty = _source.IntegerProperty,
@@ -42,14 +57,30 @@ namespace MvbaMapperTests
 						DateTimeProperty = _source.DateTimeProperty,
 						DateTimeToNullable = _source.DateTimeToNullable
 					};
-				var result = tester.Verify(destination, expected);
-				result.IsValid.ShouldBeTrue();
-				result.ToString().ShouldBeEqualTo("");
+				destination.MapFrom(_source);
 			}
 
-			private void MapFrom_is_called(OutputClass destination)
+			private void MapFrom_is_called_with_properties_to_ignore(OutputClass destination)
 			{
-				destination.MapFrom(_source);
+				_expected = new OutputClass
+					{
+						BooleanProperty = _source.BooleanProperty,
+						IntegerProperty = _source.IntegerProperty,
+						StringProperty = _source.StringProperty,
+						DecimalProperty = 0,
+						DateTimeProperty = _source.DateTimeProperty,
+						DateTimeToNullable = _source.DateTimeToNullable
+					};
+
+				destination.MapFrom(_source, x => x.DecimalProperty);
+			}
+
+			private void Map_the_property_values(OutputClass destination)
+			{
+				var tester = new MappingTester<OutputClass>();
+				var result = tester.Verify(destination, _expected);
+				result.IsValid.ShouldBeTrue();
+				result.ToString().ShouldBeEqualTo("");
 			}
 		}
 
@@ -60,7 +91,7 @@ namespace MvbaMapperTests
 			private OutputClass _expected;
 
 			[Test]
-			public void Should_populate_properties()
+			public void Given_a_source_object()
 			{
 				Test.Given(new ClassFiller<InputClass>().Source)
 					.When(MapTo_is_called)
@@ -68,12 +99,19 @@ namespace MvbaMapperTests
 					.Verify();
 			}
 
-			private void Map_the_property_values(InputClass source)
+			[Test]
+			public void Given_a_source_object_with_properties_to_ignore()
 			{
-				var tester = new MappingTester<OutputClass>();
-				var result = tester.Verify(_destination, _expected);
-				result.IsValid.ShouldBeTrue();
-				result.ToString().ShouldBeEqualTo("");
+				Test.Given(new ClassFiller<InputClass>().Source)
+					.When(MapTo_is_called_with_properties_to_ignore)
+					.Should(Ignore_the_property_values_that_were_set_ignore)
+					.Should(Map_the_property_values)
+					.Verify();
+			}
+
+			private void Ignore_the_property_values_that_were_set_ignore(InputClass source)
+			{
+				_destination.DecimalProperty.ShouldNotBeEqualTo(source.DecimalProperty);
 			}
 
 			private void MapTo_is_called(InputClass source)
@@ -88,6 +126,28 @@ namespace MvbaMapperTests
 						DateTimeProperty = source.DateTimeProperty,
 						DateTimeToNullable = source.DateTimeToNullable
 					};
+			}
+
+			private void MapTo_is_called_with_properties_to_ignore(InputClass source)
+			{
+				_destination = source.MapTo<OutputClass>(p => p.DecimalProperty);
+				_expected = new OutputClass
+					{
+						BooleanProperty = source.BooleanProperty,
+						IntegerProperty = source.IntegerProperty,
+						StringProperty = source.StringProperty,
+						DecimalProperty = 0,
+						DateTimeProperty = source.DateTimeProperty,
+						DateTimeToNullable = source.DateTimeToNullable
+					};
+			}
+
+			private void Map_the_property_values(InputClass source)
+			{
+				var tester = new MappingTester<OutputClass>();
+				var result = tester.Verify(_destination, _expected);
+				result.IsValid.ShouldBeTrue();
+				result.ToString().ShouldBeEqualTo("");
 			}
 		}
 	}

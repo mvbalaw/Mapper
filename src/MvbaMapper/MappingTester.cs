@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Linq;
-
 using CodeQuery;
-
 using MvbaCore;
 
 namespace MvbaMapper
@@ -38,11 +36,11 @@ namespace MvbaMapper
 					continue;
 				}
 
-				if (typeof(IEnumerable).IsAssignableFrom(expectedValue.GetType()) &&
-				    typeof(IEnumerable).IsAssignableFrom(actualValue.GetType()))
+				if (typeof (IEnumerable).IsAssignableFrom(expectedValue.GetType()) &&
+				    typeof (IEnumerable).IsAssignableFrom(actualValue.GetType()))
 				{
 					var comparer = new EnumerableComparer();
-					if (!comparer.HaveSameContents((IEnumerable)expectedValue, (IEnumerable)actualValue))
+					if (!comparer.HaveSameContents((IEnumerable) expectedValue, (IEnumerable) actualValue))
 					{
 						notification.Add(Notification.WarningFor(propertyInfo.Name));
 					}

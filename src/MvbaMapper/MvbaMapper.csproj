@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ClassFiller.cs" />
     <Compile Include="EnumerableComparer.cs" />
+    <Compile Include="MapperUtilities.cs" />
     <Compile Include="MappingTester.cs" />
     <Compile Include="RandomValueType.cs" />
     <Compile Include="SimpleMapper.cs" />
