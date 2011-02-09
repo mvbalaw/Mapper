@@ -78,6 +78,68 @@ namespace MvbaMapperTests
 			}
 		}
 
+
+		[TestFixture]
+		public class When_asked_to_verify_an_object_mapping_for_list_fields_without_setters
+		{
+			private OutputListClassWithoutSetterContext _context;
+			private string _expectedDifferenceMessage;
+			private Notification _notification;
+
+			[SetUp]
+			public void BeforeEachTest()
+			{
+				_context = new OutputListClassWithoutSetterContext();
+			}
+
+			[Test]
+			public void Given_objects_where_only_a_List_property_is_different()
+			{
+				Test.Given(new MappingTester<OutputListClassWithoutSetter>())
+					.When(Verify_is_called)
+					.With(A_list_property_difference)
+					.Should(Detect_the_difference)
+					.Should(Give_the_name_of_the_property_that_has_the_value_difference)
+					.Verify();
+			}
+
+			private void A_list_property_difference(MappingTester<OutputListClassWithoutSetter> obj)
+			{
+				var destinationItems = new List<int>
+					{
+						4,
+						5,
+						6
+					};
+				_context.Destination = new OutputListClassWithoutSetter(destinationItems);
+				var expectedItems = new List<int>
+					{
+						4,
+						5,
+						6,
+						7
+					};
+				_context.Expected = new OutputListClassWithoutSetter(expectedItems);
+				_expectedDifferenceMessage = "Items";
+			}
+
+			private void Detect_the_difference()
+			{
+				_notification.IsValid.ShouldBeFalse();
+			}
+
+			private void Give_the_name_of_the_property_that_has_the_value_difference()
+			{
+				_notification.ToString().ShouldBeEqualTo(_expectedDifferenceMessage);
+			}
+
+			private void Verify_is_called(MappingTester<OutputListClassWithoutSetter> obj)
+			{
+				_notification = obj.Verify(_context.Destination, _context.Expected);
+			}
+		}
+
+
 		[TestFixture]
 		public class When_asked_to_verify_an_object_mapping_for_non_list_fields
 		{

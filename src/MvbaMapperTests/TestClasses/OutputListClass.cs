@@ -6,4 +6,15 @@ namespace MvbaMapperTests.TestClasses
 	{
 		public List<int> Items { get; set; }
 	}
+
+	public class OutputListClassWithoutSetter
+	{
+		public OutputListClassWithoutSetter(List<int> items)
+		{
+			Items = items;
+		}
+
+		public List<int> Items { get; private set; }
+	}
+
 }
