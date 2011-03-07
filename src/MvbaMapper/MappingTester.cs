@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Linq;
+
 using CodeQuery;
+
 using MvbaCore;
 
 namespace MvbaMapper
@@ -11,22 +13,41 @@ namespace MvbaMapper
 		public Notification Verify(TDestination actual, TDestination expected)
 		{
 			var notification = new Notification();
-			var thatHaveAGetter = expected.GetType()
+			var properties = expected.GetType()
 				.GetProperties()
-				.ThatHaveAGetter();
-			var thatHaveASetter = thatHaveAGetter
-				.ThatHaveASetter();
-			var thatAreEnumerable = thatHaveAGetter
-				.Where(x => typeof (IEnumerable).IsAssignableFrom(x.PropertyType));
-			var destinationProperties = thatHaveASetter.Concat(thatAreEnumerable).Distinct()
-				.ToDictionary(x => x.Name, x => x);
+				.ThatHaveAGetter()
+				.ThatHaveASetter()
+				.Select(x =>
+				        	{
+				        		Func<TDestination, object> getter = instance => x.GetValue(instance, null);
+				        		return new
+				        			{
+				        				x.Name,
+				        				GetValue = getter,
+				        				ReturnType = x.PropertyType
+				        			};
+				        	});
+			var fields = expected.GetType()
+				.GetFields()
+				.Select(x =>
+				        	{
+				        		Func<TDestination, object> getter = instance => x.GetValue(instance);
+				        		return new
+				        			{
+				        				x.Name,
+				        				GetValue = getter,
+				        				ReturnType = x.FieldType
+				        			};
+				        	});
 
-			foreach (var propertyInfo in destinationProperties.Values)
+			var lookup = properties.Concat(fields).ToDictionary(x => x.Name, x => x);
+			var comparer = new EnumerableComparer();
+			foreach (var propertyOrField in lookup.Values)
 			{
 				try
 				{
-					var expectedValue = propertyInfo.GetValue(expected, null);
-					var actualValue = propertyInfo.GetValue(actual, null);
+					var expectedValue = propertyOrField.GetValue(expected);
+					var actualValue = propertyOrField.GetValue(actual);
 
 					if (expectedValue == null && actualValue == null)
 					{
@@ -34,7 +55,7 @@ namespace MvbaMapper
 					}
 					if (expectedValue == null || actualValue == null)
 					{
-						notification.Add(Notification.WarningFor(propertyInfo.Name));
+						notification.Add(Notification.WarningFor(propertyOrField.Name));
 						continue;
 					}
 
@@ -43,24 +64,23 @@ namespace MvbaMapper
 						continue;
 					}
 
-					if (typeof (IEnumerable).IsAssignableFrom(expectedValue.GetType()) &&
-					    typeof (IEnumerable).IsAssignableFrom(actualValue.GetType()))
+					if (typeof(IEnumerable).IsAssignableFrom(expectedValue.GetType()) &&
+					    typeof(IEnumerable).IsAssignableFrom(actualValue.GetType()))
 					{
-						var comparer = new EnumerableComparer();
-						if (!comparer.HaveSameContents((IEnumerable) expectedValue, (IEnumerable) actualValue))
+						if (!comparer.HaveSameContents((IEnumerable)expectedValue, (IEnumerable)actualValue))
 						{
-							notification.Add(Notification.WarningFor(propertyInfo.Name));
+							notification.Add(Notification.WarningFor(propertyOrField.Name));
 						}
 						continue;
 					}
 					if (!expectedValue.Equals(actualValue))
 					{
-						notification.Add(Notification.WarningFor(propertyInfo.Name));
+						notification.Add(Notification.WarningFor(propertyOrField.Name));
 					}
 				}
 				catch (Exception e)
 				{
-					throw new ArgumentException("unexpected exception testing property " + propertyInfo.Name, e);
+					throw new ArgumentException("unexpected exception testing property " + propertyOrField.Name, e);
 				}
 			}
 			return notification;

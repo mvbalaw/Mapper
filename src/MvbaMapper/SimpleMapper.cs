@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using CodeQuery;
@@ -16,7 +17,7 @@ namespace MvbaMapper
 		public void Map<TDestination>(object source, object destination,
 		                              Expression<Func<TDestination, object>>[] propertiesToIgnore)
 		{
-			var properties = new MapperUtilities().GetPropertyNames(propertiesToIgnore);
+			var properties = new HashSet<string>(new MapperUtilities().GetPropertyNames(propertiesToIgnore));
 			if (source == null)
 			{
 				return;
@@ -25,7 +26,7 @@ namespace MvbaMapper
 			{
 				throw new ArgumentNullException("destination");
 			}
-			foreach (var std in Reflection.GetMatchingProperties(source.GetType(), destination.GetType())
+			foreach (var std in Reflection.GetMatchingFieldsAndProperties(source.GetType(), destination.GetType())
 				.Where(x => !properties.Contains(x.Name))
 				.Where(x => x.DestinationPropertyType.IsAssignableFrom(x.SourcePropertyType) ||
 				            x.DestinationPropertyType.IsGenericAssignableFrom(x.SourcePropertyType)))
