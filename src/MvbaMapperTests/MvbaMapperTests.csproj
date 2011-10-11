@@ -83,7 +83,9 @@
   <ItemGroup>
     <Compile Include="ClassFillerTests.cs" />
     <Compile Include="EnumerableComparerTests.cs" />
+    <Compile Include="TestClasses\AlternateNameContext.cs" />
     <Compile Include="TestClasses\LowerCaseContext.cs" />
+    <Compile Include="TestClasses\OutputAlternativeNamesClass.cs" />
     <Compile Include="TestClasses\OutputClassContext.cs" />
     <Compile Include="TestClasses\ObjectSourceContext.cs" />
     <Compile Include="TestClasses\InputClass.cs" />

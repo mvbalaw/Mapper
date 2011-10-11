@@ -7,6 +7,7 @@ namespace MvbaMapper
 {
 	public class MapperUtilities
 	{
+		[Obsolete]
 		public List<string> GetPropertyNames<TDestination>(
 			IEnumerable<Expression<Func<TDestination, object>>> propertiesToIgnore)
 		{
