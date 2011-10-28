@@ -1,5 +1,7 @@
 using FluentAssert;
 
+using JetBrains.Annotations;
+
 using MvbaMapper;
 
 using MvbaMapperTests.TestClasses;
@@ -8,6 +10,7 @@ using NUnit.Framework;
 
 namespace MvbaMapperTests
 {
+	[UsedImplicitly]
 	public class TExtensionsTests
 	{
 		[TestFixture]

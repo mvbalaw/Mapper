@@ -13,6 +13,8 @@ using System.Linq.Expressions;
 
 using FluentAssert;
 
+using JetBrains.Annotations;
+
 using MvbaCore;
 
 using MvbaMapper;
@@ -23,6 +25,7 @@ using NUnit.Framework;
 
 namespace MvbaMapperTests
 {
+	[UsedImplicitly]
 	public class SimpleMapperTests
 	{
 		[TestFixture]
@@ -47,6 +50,17 @@ namespace MvbaMapperTests
 					.When(Map_is_called)
 					.With(A_null_source)
 					.Should(Not_change_the_destination_object)
+					.Verify();
+			}
+
+			[Test]
+			public void Given_custom_conversions_are_requested()
+			{
+				Test.Given(new SimpleMapper())
+					.WithContext(new SourceContext())
+					.When(Map_is_called_with_custom_conversions)
+					.With(Inputs_configured_for_custom_conversions)
+					.Should(Map_the_property_values)
 					.Verify();
 			}
 
@@ -113,6 +127,21 @@ namespace MvbaMapperTests
 				context.Destination.DecimalProperty.ShouldNotBeEqualTo(context.Source.DecimalProperty);
 			}
 
+			private static void Inputs_configured_for_custom_conversions(SimpleMapper obj, SourceContext context)
+			{
+				context.Source = new ClassFiller<InputClass>().Source;
+				context.Destination = new OutputClass();
+				context.Expected = new OutputClass
+				{
+					BooleanProperty = context.Source.BooleanProperty,
+					DateTimeProperty = context.Source.DateTimeProperty.AddDays(-1),
+					DateTimeToNullable = context.Source.DateTimeToNullable.AddDays(1),
+					DecimalProperty = context.Source.DecimalProperty + 1,
+					IntegerProperty = context.Source.IntegerProperty + 1,
+					StringProperty = context.Source.StringProperty + "!"
+				};
+			}
+
 			private static void Inputs_whose_property_names_have_different_casing(SimpleMapper obj, LowerCaseContext context)
 			{
 				context.Source = new ClassFiller<InputClass>().Source;
@@ -154,15 +183,24 @@ namespace MvbaMapperTests
 				obj.Map(context.Source, context.Destination);
 			}
 
+			private static void Map_is_called_with_custom_conversions(SimpleMapper obj, SourceContext context)
+			{
+				context.Source.Map()
+					.WithCustomConversion((d1, d2) => d1 == typeof(decimal) && d2 == typeof(decimal), value => (decimal)value + 1)
+					.WithCustomConverter(new DateTimeToNullableDateTimeConverter())
+					.WithCustomConverters(new IntToIntConverter(), new DateTimeToDateTimeConverter(), new StringToStringConverter())
+					.To(context.Destination);
+			}
+
 			private static void Map_is_called_with_custom_properties_to_link(SimpleMapper obj, AlternateNameContext context)
 			{
 				context.Source.Map()
-					.WithLink<InputClass, OutputAlternativeNamesClass>(x => x.BooleanProperty, x => x.BoolProperty)
-					.WithLink<InputClass, OutputAlternativeNamesClass>(x => x.DateTimeProperty, x => x.DateProperty)
-					.WithLink<InputClass, OutputAlternativeNamesClass>(x => x.DateTimeToNullable, x => x.NullableDateProperty)
-					.WithLink<InputClass, OutputAlternativeNamesClass>(x => x.DecimalProperty, x => x.DecProperty)
-					.WithLink<InputClass, OutputAlternativeNamesClass>(x => x.IntegerProperty, x => x.IntProperty)
-					.WithLink<InputClass, OutputAlternativeNamesClass>(x => x.StringProperty, x => x.StrProperty)
+					.WithLink<OutputAlternativeNamesClass>(x => x.BooleanProperty, x => x.BoolProperty)
+					.WithLink(x => x.DateTimeProperty, x => x.DateProperty)
+					.WithLink(x => x.DateTimeToNullable, x => x.NullableDateProperty)
+					.WithLink(x => x.DecimalProperty, x => x.DecProperty)
+					.WithLink(x => x.IntegerProperty, x => x.IntProperty)
+					.WithLink(x => x.StringProperty, x => x.StrProperty)
 					.To(context.Destination);
 			}
 
@@ -234,5 +272,53 @@ namespace MvbaMapperTests
 				context.Destination = new OutputClass();
 			}
 		}
+	}
+
+	internal class DateTimeToNullableDateTimeConverter : ITypeConverter
+	{
+		public DateTimeToNullableDateTimeConverter()
+		{
+			CanConvert = (d1, d2) => d1 == typeof(DateTime) && d2 == typeof(DateTime?);
+			Convert = value => ((DateTime?)value).Value.AddDays(1);
+		}
+
+		public Func<Type, Type, bool> CanConvert { get; private set; }
+		public Func<object, object> Convert { get; private set; }
+	}
+
+	internal class DateTimeToDateTimeConverter : ITypeConverter
+	{
+		public DateTimeToDateTimeConverter()
+		{
+			CanConvert = (d1, d2) => d1 == typeof(DateTime) && d2 == typeof(DateTime);
+			Convert = value => ((DateTime?)value).Value.AddDays(-1);
+		}
+
+		public Func<Type, Type, bool> CanConvert { get; private set; }
+		public Func<object, object> Convert { get; private set; }
+	}
+
+	internal class IntToIntConverter : ITypeConverter
+	{
+		public IntToIntConverter()
+		{
+			CanConvert = (d1, d2) => d1 == typeof(int) && d2 == typeof(int);
+			Convert = value => (int)value + 1;
+		}
+
+		public Func<Type, Type, bool> CanConvert { get; private set; }
+		public Func<object, object> Convert { get; private set; }
+	}
+
+	internal class StringToStringConverter : ITypeConverter
+	{
+		public StringToStringConverter()
+		{
+			CanConvert = (d1, d2) => d1 == typeof(string) && d2 == typeof(string);
+			Convert = value => (string)value + "!";
+		}
+
+		public Func<Type, Type, bool> CanConvert { get; private set; }
+		public Func<object, object> Convert { get; private set; }
 	}
 }
