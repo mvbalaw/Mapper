@@ -69,6 +69,10 @@ namespace MvbaMapper
 			}
 			var sourceType = source.GetType();
 			var destinationType = destination.GetType();
+			if (IsProxyClass(sourceType))
+			{
+				sourceType = sourceType.BaseType;
+			}
 			string key = sourceType.FullName + destinationType.FullName;
 			var map = FrequentMaps[key];
 			if (map == null || customDestinationPropertyNameToSourcePropertyNameMap.Count > 0)
@@ -100,6 +104,11 @@ namespace MvbaMapper
 			{
 				action.Value(source, destination);
 			}
+		}
+
+		public bool IsProxyClass(Type sourceType)
+		{
+			return sourceType.GetInterfaces().Any(x => x.FullName == "NHibernate.Proxy.DynamicProxy.IProxy");
 		}
 
 		public class SimpleMapperParameters
