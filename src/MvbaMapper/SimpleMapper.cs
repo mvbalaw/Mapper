@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using CodeQuery;
 
 using MvbaCore;
+using MvbaCore.Collections;
 
 namespace MvbaMapper
 {
