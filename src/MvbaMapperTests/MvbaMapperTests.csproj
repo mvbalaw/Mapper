@@ -81,6 +81,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ClassFillerTests.cs" />
     <Compile Include="EnumerableComparerTests.cs" />
     <Compile Include="TestClasses\AlternateNameContext.cs" />
