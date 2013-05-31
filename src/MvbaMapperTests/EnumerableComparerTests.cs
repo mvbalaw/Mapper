@@ -3,12 +3,15 @@ using System.Collections.Generic;
 
 using FluentAssert;
 
+using JetBrains.Annotations;
+
 using MvbaMapper;
 
 using NUnit.Framework;
 
 namespace MvbaMapperTests
 {
+	[UsedImplicitly]
 	public class EnumerableComparerTests
 	{
 		[TestFixture]

@@ -63,8 +63,8 @@ namespace MvbaMapper
 						continue;
 					}
 
-					if (typeof(IEnumerable).IsAssignableFrom(expectedValue.GetType()) &&
-					    typeof(IEnumerable).IsAssignableFrom(actualValue.GetType()))
+					if (expectedValue is IEnumerable &&
+					    actualValue is IEnumerable)
 					{
 						if (!comparer.HaveSameContents((IEnumerable)expectedValue, (IEnumerable)actualValue))
 						{

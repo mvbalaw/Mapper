@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 using FluentAssert;
 
+using JetBrains.Annotations;
+
 using MvbaCore;
 
 using MvbaMapper;
@@ -12,6 +14,7 @@ using NUnit.Framework;
 
 namespace MvbaMapperTests
 {
+	[UsedImplicitly]
 	public class MappingTesterTests
 	{
 		[TestFixture]

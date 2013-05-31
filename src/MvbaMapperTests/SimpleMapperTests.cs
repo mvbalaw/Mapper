@@ -155,7 +155,7 @@ namespace MvbaMapperTests
 				string inputPropertyName = Reflection.GetPropertyName((InputClass input) => input.StringProperty);
 				string actualPropertyName = Reflection.GetPropertyName((OutputClassLowerCase x) => x.strIngPropErty);
 				actualPropertyName.ShouldNotBeEqualTo(inputPropertyName);
-				String.Compare(actualPropertyName, inputPropertyName, true).ShouldBeEqualTo(0);
+				String.Compare(actualPropertyName, inputPropertyName, StringComparison.OrdinalIgnoreCase).ShouldBeEqualTo(0);
 			}
 
 			private static void Inputs_whose_property_names_have_different_spelling(SimpleMapper obj, AlternateNameContext context)
