@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-using CodeQuery;
+using MvbaCore.CodeQuery;
 
 namespace MvbaMapper
 {

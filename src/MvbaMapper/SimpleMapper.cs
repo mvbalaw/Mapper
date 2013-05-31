@@ -14,9 +14,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 
-using CodeQuery;
-
 using MvbaCore;
+using MvbaCore.CodeQuery;
 using MvbaCore.Collections;
 
 namespace MvbaMapper

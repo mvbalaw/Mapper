@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Linq;
 
-using CodeQuery;
-
 using MvbaCore;
+using MvbaCore.CodeQuery;
 
 namespace MvbaMapper
 {
