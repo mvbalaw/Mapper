@@ -17,13 +17,11 @@ using JetBrains.Annotations;
 
 using MvbaCore;
 
-using MvbaMapper;
-
-using MvbaMapperTests.TestClasses;
+using MvbaMapper.Tests.TestClasses;
 
 using NUnit.Framework;
 
-namespace MvbaMapperTests
+namespace MvbaMapper.Tests
 {
 	[UsedImplicitly]
 	public class SimpleMapperTests

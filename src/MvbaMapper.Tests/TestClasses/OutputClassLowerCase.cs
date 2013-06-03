@@ -1,4 +1,4 @@
-namespace MvbaMapperTests.TestClasses
+namespace MvbaMapper.Tests.TestClasses
 {
 	public class OutputClassLowerCase
 	{

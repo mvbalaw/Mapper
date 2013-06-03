@@ -1,6 +1,6 @@
 using System;
 
-namespace MvbaMapperTests.TestClasses
+namespace MvbaMapper.Tests.TestClasses
 {
 	public class OutputAlternativeNamesClass
 	{

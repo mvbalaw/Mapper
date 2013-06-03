@@ -53,9 +53,9 @@
   <ItemGroup>
     <Reference Include="FastReflection, Version=1.0.0.11, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\MvbaCore\FastReflection.dll</HintPath>
+      <HintPath>..\..\lib\FastReflection\FastReflection.dll</HintPath>
     </Reference>
-    <Reference Include="MvbaCore, Version=0.1.0.120, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MvbaCore, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\MvbaCore\MvbaCore.dll</HintPath>
     </Reference>

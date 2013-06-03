@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvbaMapper", "MvbaMapper\MvbaMapper.csproj", "{7D7EBF6E-8A5D-4C06-9B4C-ADAFB744A6CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvbaMapperTests", "MvbaMapperTests\MvbaMapperTests.csproj", "{9447608F-ACFF-433D-85C4-D88BAFF2FBCF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvbaMapper.Tests", "MvbaMapper.Tests\MvbaMapper.Tests.csproj", "{9447608F-ACFF-433D-85C4-D88BAFF2FBCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
