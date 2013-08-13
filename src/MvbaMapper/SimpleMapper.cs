@@ -34,6 +34,11 @@ namespace MvbaMapper
 			return new SimpleMapperParameters().Except(destinationProperties);
 		}
 
+		public bool IsProxyClass(Type sourceType)
+		{
+			return sourceType.GetInterfaces().Any(x => x.FullName == "NHibernate.Proxy.DynamicProxy.IProxy");
+		}
+
 		public SimpleMapperParameters Link<TSource, TDestination>(Expression<Func<TSource, object>> sourceProperty, Expression<Func<TDestination, object>> destinationProperty)
 		{
 			return new SimpleMapperParameters().Link(sourceProperty, destinationProperty);
@@ -46,7 +51,7 @@ namespace MvbaMapper
 		}
 
 		public void Map<TDestination>(object source, object destination,
-		                              params Expression<Func<TDestination, object>>[] propertiesToIgnore)
+			params Expression<Func<TDestination, object>>[] propertiesToIgnore)
 		{
 			new SimpleMapperParameters(this)
 				.Except(propertiesToIgnore)
@@ -54,10 +59,10 @@ namespace MvbaMapper
 		}
 
 		private void Map(object source,
-		                 object destination,
-		                 StringDictionary customDestinationPropertyNameToSourcePropertyNameMap,
-		                 ICollection<string> propertiesToIgnore,
-		                 ICollection<ITypeConverter> customConverters)
+			object destination,
+			StringDictionary customDestinationPropertyNameToSourcePropertyNameMap,
+			ICollection<string> propertiesToIgnore,
+			ICollection<ITypeConverter> customConverters)
 		{
 			if (source == null)
 			{
@@ -73,27 +78,28 @@ namespace MvbaMapper
 			{
 				sourceType = sourceType.BaseType;
 			}
-			string key = sourceType.FullName + destinationType.FullName;
+// ReSharper disable once PossibleNullReferenceException
+			var key = sourceType.FullName + destinationType.FullName;
 			var map = FrequentMaps[key];
 			if (map == null || customDestinationPropertyNameToSourcePropertyNameMap.Count > 0)
 			{
 				map = Reflection.GetMatchingFieldsAndProperties(sourceType, destinationType, customDestinationPropertyNameToSourcePropertyNameMap)
 					.Where(x => x.DestinationPropertyType.IsAssignableFrom(x.SourcePropertyType) ||
-					            x.DestinationPropertyType.IsGenericAssignableFrom(x.SourcePropertyType) ||
-					            customConverters.Any(y => y.CanConvert(x.SourcePropertyType, x.DestinationPropertyType)))
+						x.DestinationPropertyType.IsGenericAssignableFrom(x.SourcePropertyType) ||
+						customConverters.Any(y => y.CanConvert(x.SourcePropertyType, x.DestinationPropertyType)))
 					.Select(x => new KeyValuePair<string, Action<object, object>>(x.Name, (s, d) =>
+					{
+						var sourceValue = x.GetValueFromSource(s);
+						var converter = customConverters.FirstOrDefault(y => y.CanConvert(x.SourcePropertyType, x.DestinationPropertyType));
+						if (converter != null)
 						{
-							var sourceValue = x.GetValueFromSource(s);
-							var converter = customConverters.FirstOrDefault(y => y.CanConvert(x.SourcePropertyType, x.DestinationPropertyType));
-							if (converter != null)
-							{
-								sourceValue = converter.Convert(sourceValue);
-							}
-							x.SetValueToDestination(d, sourceValue);
-						}))
+							sourceValue = converter.Convert(sourceValue);
+						}
+						x.SetValueToDestination(d, sourceValue);
+					}))
 					.ToList();
 				if (customDestinationPropertyNameToSourcePropertyNameMap.Count == 0 &&
-				    customConverters.Count == 0)
+					customConverters.Count == 0)
 				{
 					FrequentMaps.Add(key, map);
 				}
@@ -104,11 +110,6 @@ namespace MvbaMapper
 			{
 				action.Value(source, destination);
 			}
-		}
-
-		public bool IsProxyClass(Type sourceType)
-		{
-			return sourceType.GetInterfaces().Any(x => x.FullName == "NHibernate.Proxy.DynamicProxy.IProxy");
 		}
 
 		public class SimpleMapperParameters
@@ -131,10 +132,10 @@ namespace MvbaMapper
 			public SimpleMapperParameters AddCustomConverter(Func<Type, Type, bool> canConvert, Func<object, object> convert)
 			{
 				return AddCustomConverter(new TypeConverter
-				{
-					CanConvert = canConvert,
-					Convert = convert
-				});
+				                          {
+					                          CanConvert = canConvert,
+					                          Convert = convert
+				                          });
 			}
 
 			public SimpleMapperParameters AddCustomConverter(ITypeConverter typeConverter)
@@ -151,7 +152,7 @@ namespace MvbaMapper
 
 			public SimpleMapperParameters Except<TDestination>(Expression<Func<TDestination, object>> destinationProperty)
 			{
-				string destinationPropertyName = Reflection.GetPropertyName(destinationProperty);
+				var destinationPropertyName = Reflection.GetPropertyName(destinationProperty);
 				_exceptions.Add(destinationPropertyName);
 				return this;
 			}
@@ -160,7 +161,7 @@ namespace MvbaMapper
 			{
 				foreach (var destinationProperty in destinationProperties)
 				{
-					string destinationPropertyName = Reflection.GetPropertyName(destinationProperty);
+					var destinationPropertyName = Reflection.GetPropertyName(destinationProperty);
 					_exceptions.Add(destinationPropertyName);
 				}
 				return this;
@@ -168,8 +169,8 @@ namespace MvbaMapper
 
 			public SimpleMapperParameters Link<TSource, TDestination>(Expression<Func<TSource, object>> sourceProperty, Expression<Func<TDestination, object>> destinationProperty)
 			{
-				string sourcePropertyName = Reflection.GetPropertyName(sourceProperty);
-				string destinationPropertyName = Reflection.GetPropertyName(destinationProperty);
+				var sourcePropertyName = Reflection.GetPropertyName(sourceProperty);
+				var destinationPropertyName = Reflection.GetPropertyName(destinationProperty);
 				_customDestinationPropertyNameToSourcePropertyNameMap.Add(destinationPropertyName, sourcePropertyName);
 				return this;
 			}

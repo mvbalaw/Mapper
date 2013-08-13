@@ -130,14 +130,14 @@ namespace MvbaMapper.Tests
 				context.Source = new ClassFiller<InputClass>().Source;
 				context.Destination = new OutputClass();
 				context.Expected = new OutputClass
-				{
-					BooleanProperty = context.Source.BooleanProperty,
-					DateTimeProperty = context.Source.DateTimeProperty.AddDays(-1),
-					DateTimeToNullable = context.Source.DateTimeToNullable.AddDays(1),
-					DecimalProperty = context.Source.DecimalProperty + 1,
-					IntegerProperty = context.Source.IntegerProperty + 1,
-					StringProperty = context.Source.StringProperty + "!"
-				};
+				                   {
+					                   BooleanProperty = context.Source.BooleanProperty,
+					                   DateTimeProperty = context.Source.DateTimeProperty.AddDays(-1),
+					                   DateTimeToNullable = context.Source.DateTimeToNullable.AddDays(1),
+					                   DecimalProperty = context.Source.DecimalProperty + 1,
+					                   IntegerProperty = context.Source.IntegerProperty + 1,
+					                   StringProperty = context.Source.StringProperty + "!"
+				                   };
 			}
 
 			private static void Inputs_whose_property_names_have_different_casing(SimpleMapper obj, LowerCaseContext context)
@@ -145,13 +145,13 @@ namespace MvbaMapper.Tests
 				context.Source = new ClassFiller<InputClass>().Source;
 				context.Destination = new OutputClassLowerCase();
 				context.Expected = new OutputClassLowerCase
-				{
-					strIngPropErty = context.Source.StringProperty,
-				};
+				                   {
+					                   strIngPropErty = context.Source.StringProperty,
+				                   };
 
 				// sanity check that the property names are different by case alone
-				string inputPropertyName = Reflection.GetPropertyName((InputClass input) => input.StringProperty);
-				string actualPropertyName = Reflection.GetPropertyName((OutputClassLowerCase x) => x.strIngPropErty);
+				var inputPropertyName = Reflection.GetPropertyName((InputClass input) => input.StringProperty);
+				var actualPropertyName = Reflection.GetPropertyName((OutputClassLowerCase x) => x.strIngPropErty);
 				actualPropertyName.ShouldNotBeEqualTo(inputPropertyName);
 				String.Compare(actualPropertyName, inputPropertyName, StringComparison.OrdinalIgnoreCase).ShouldBeEqualTo(0);
 			}
@@ -161,14 +161,14 @@ namespace MvbaMapper.Tests
 				context.Source = new ClassFiller<InputClass>().Source;
 				context.Destination = new OutputAlternativeNamesClass();
 				context.Expected = new OutputAlternativeNamesClass
-				{
-					BoolProperty = context.Source.BooleanProperty,
-					DateProperty = context.Source.DateTimeProperty,
-					NullableDateProperty = context.Source.DateTimeToNullable,
-					DecProperty = context.Source.DecimalProperty,
-					IntProperty = context.Source.IntegerProperty,
-					StrProperty = context.Source.StringProperty,
-				};
+				                   {
+					                   BoolProperty = context.Source.BooleanProperty,
+					                   DateProperty = context.Source.DateTimeProperty,
+					                   NullableDateProperty = context.Source.DateTimeToNullable,
+					                   DecProperty = context.Source.DecimalProperty,
+					                   IntProperty = context.Source.IntegerProperty,
+					                   StrProperty = context.Source.StringProperty,
+				                   };
 			}
 
 			private static void Map_is_called(SimpleMapper simpleMapper, ObjectSourceContext context)
@@ -243,14 +243,14 @@ namespace MvbaMapper.Tests
 				var source = new ClassFiller<InputClass>().Source;
 				context.Source = source;
 				context.Expected = new OutputClass
-				{
-					BooleanProperty = source.BooleanProperty,
-					IntegerProperty = source.IntegerProperty,
-					StringProperty = source.StringProperty,
-					DecimalProperty = 0,
-					DateTimeProperty = source.DateTimeProperty,
-					DateTimeToNullable = source.DateTimeToNullable
-				};
+				                   {
+					                   BooleanProperty = source.BooleanProperty,
+					                   IntegerProperty = source.IntegerProperty,
+					                   StringProperty = source.StringProperty,
+					                   DecimalProperty = 0,
+					                   DateTimeProperty = source.DateTimeProperty,
+					                   DateTimeToNullable = source.DateTimeToNullable
+				                   };
 				context.Destination = new OutputClass();
 			}
 
@@ -259,14 +259,14 @@ namespace MvbaMapper.Tests
 				var source = new ClassFiller<InputClass>().Source;
 				context.Source = source;
 				context.Expected = new OutputClass
-				{
-					BooleanProperty = source.BooleanProperty,
-					IntegerProperty = source.IntegerProperty,
-					StringProperty = source.StringProperty,
-					DecimalProperty = source.DecimalProperty,
-					DateTimeProperty = source.DateTimeProperty,
-					DateTimeToNullable = source.DateTimeToNullable
-				};
+				                   {
+					                   BooleanProperty = source.BooleanProperty,
+					                   IntegerProperty = source.IntegerProperty,
+					                   StringProperty = source.StringProperty,
+					                   DecimalProperty = source.DecimalProperty,
+					                   DateTimeProperty = source.DateTimeProperty,
+					                   DateTimeToNullable = source.DateTimeToNullable
+				                   };
 				context.Destination = new OutputClass();
 			}
 		}

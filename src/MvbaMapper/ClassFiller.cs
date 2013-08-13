@@ -30,6 +30,7 @@ namespace MvbaMapper
 				.ThatHaveAGetter()
 				.ThatHaveASetter())
 			{
+// ReSharper disable once PossibleNullReferenceException
 				var value = RandomValueType.GetFor(propertyInfo.PropertyType.FullName).CreateRandomValue();
 				_propertyValues.Add(propertyInfo.Name, value);
 				propertyInfo.SetValue(source, value, null);
