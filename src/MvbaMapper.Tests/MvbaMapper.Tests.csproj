@@ -67,6 +67,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="MvbaCore, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\MvbaCore\MvbaCore.dll</HintPath>
@@ -84,6 +85,7 @@
     <Compile Include="ClassFillerTests.cs" />
     <Compile Include="EnumerableComparerTests.cs" />
     <Compile Include="TestClasses\AlternateNameContext.cs" />
+    <Compile Include="TestClasses\DynamicDestinationContext.cs" />
     <Compile Include="TestClasses\LowerCaseContext.cs" />
     <Compile Include="TestClasses\OutputAlternativeNamesClass.cs" />
     <Compile Include="TestClasses\OutputClassContext.cs" />

@@ -78,8 +78,13 @@ namespace MvbaMapper
 			{
 				sourceType = sourceType.BaseType;
 			}
-// ReSharper disable once PossibleNullReferenceException
+			if (IsProxyClass(destinationType))
+			{
+				destinationType = destinationType.BaseType;
+			}
+			// ReSharper disable PossibleNullReferenceException
 			var key = sourceType.FullName + destinationType.FullName;
+			// ReSharper restore PossibleNullReferenceException
 			var map = FrequentMaps[key];
 			if (map == null || customDestinationPropertyNameToSourcePropertyNameMap.Count > 0)
 			{

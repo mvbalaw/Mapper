@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 using MvbaCore;
 
 using MvbaMapper.Tests.TestClasses;
-
+using NHibernate.Proxy.DynamicProxy;
 using NUnit.Framework;
 
 namespace MvbaMapper.Tests
@@ -107,6 +107,18 @@ namespace MvbaMapper.Tests
 					.Verify();
 			}
 
+			[Test]
+			public void Given_NHibernate_dynamic_proxy_as_destination()
+			{
+				Test.Given(new SimpleMapper())
+					.WithContext(new DynamicDestinationContext())
+					.When(Map_is_called)
+					.With(NHibernate_dynamic_proxy_as_destination)
+					.Should(Map_the_property_values)
+					.Verify();
+			}
+
+
 			private static void A_null_destination(SimpleMapper arg1, ObjectSourceContext context)
 			{
 				context.Source = new ClassFiller<InputClass>().Source;
@@ -176,6 +188,11 @@ namespace MvbaMapper.Tests
 				simpleMapper.Map(context.Source, context.Destination);
 			}
 
+			private static void Map_is_called(SimpleMapper simpleMapper, DynamicDestinationContext context)
+			{
+				simpleMapper.Map(context.Source, context.Destination);
+			}
+
 			private static void Map_is_called(SimpleMapper obj, LowerCaseContext context)
 			{
 				obj.Map(context.Source, context.Destination);
@@ -226,6 +243,12 @@ namespace MvbaMapper.Tests
 				result.IsValid.ShouldBeTrue(result.ToString());
 			}
 
+			private static void Map_the_property_values(DynamicDestinationContext context)
+			{
+				var result = new MappingTester<object>().Verify(context.Destination, context.Expected);
+				result.IsValid.ShouldBeTrue(result.ToString());
+			}
+
 			private static void Map_the_property_values(SourceContext context)
 			{
 				var result = new MappingTester<OutputClass>().Verify(context.Destination, context.Expected);
@@ -268,6 +291,23 @@ namespace MvbaMapper.Tests
 					                   DateTimeToNullable = source.DateTimeToNullable
 				                   };
 				context.Destination = new OutputClass();
+			}
+
+			private static void NHibernate_dynamic_proxy_as_destination(SimpleMapper obj, DynamicDestinationContext context)
+			{
+				var source = new ClassFiller<InputClass>().Source;
+				context.Source = source;
+				context.Expected = new OutputClass
+				                   {
+					                   BooleanProperty = source.BooleanProperty,
+					                   IntegerProperty = source.IntegerProperty,
+					                   StringProperty = source.StringProperty,
+					                   DecimalProperty = source.DecimalProperty,
+					                   DateTimeProperty = source.DateTimeProperty,
+					                   DateTimeToNullable = source.DateTimeToNullable
+				                   };
+				// ReSharper disable once RedundantCast
+				context.Destination = new DynamicOutputClass();
 			}
 		}
 	}
@@ -318,5 +358,22 @@ namespace MvbaMapper.Tests
 
 		public Func<Type, Type, bool> CanConvert { get; private set; }
 		public Func<object, object> Convert { get; private set; }
+	}
+}
+
+namespace NHibernate.Proxy.DynamicProxy
+{
+	public interface IProxy
+	{
+	}
+
+	public class DynamicOutputClass : OutputClass, IProxy
+	{
+		public new bool BooleanProperty { get; set; }
+		public new DateTime DateTimeProperty { get; set; }
+		public new DateTime? DateTimeToNullable { get; set; }
+		public new decimal DecimalProperty { get; set; }
+		public new int IntegerProperty { get; set; }
+		public new string StringProperty { get; set; }
 	}
 }
