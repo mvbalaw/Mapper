@@ -36,7 +36,7 @@ namespace MvbaMapper
 
 		public bool IsProxyClass(Type sourceType)
 		{
-			return sourceType.GetInterfaces().Any(x => x.FullName == "NHibernate.Proxy.DynamicProxy.IProxy");
+			return sourceType.GetInterfaces().Any(x => x.FullName == "NHibernate.Proxy.DynamicProxy.IProxy" || x.FullName == "NHibernate.Proxy.INHibernateProxy");
 		}
 
 		public SimpleMapperParameters Link<TSource, TDestination>(Expression<Func<TSource, object>> sourceProperty, Expression<Func<TDestination, object>> destinationProperty)
